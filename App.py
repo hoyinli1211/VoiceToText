@@ -1,5 +1,5 @@
 import streamlit as st
-import SpeechRecognition as sr
+import speech_recognition as sr
 
 def main():
   st.title("Voice to Text Converter")
