@@ -1,22 +1,14 @@
 import streamlit as st
-import speech_recognition as sr
+import wave
 
 def main():
-  st.title("Voice to Text Converter")
+    st.set_page_config(page_title="Upload Voice File", page_icon=":microphone:", layout="wide")
+    st.title("Upload Voice File")
 
-  uploaded_file = st.file_uploader("Choose a voice message to convert to text:")
-  if uploaded_file is not None:
-      audio_data = sr.AudioData(uploaded_file.read(), uploaded_file.name.split(".")[-1])
-      r = sr.Recognizer()
-      text = ""
-      try:
-          text = r.recognize_google(audio_data)
-      except sr.UnknownValueError:
-          st.error("Sorry, I could not understand the audio")
-      except sr.RequestError as e:
-          st.error("Error: {0}".format(e))
-      st.success("Successfully converted audio to text!")
-      st.markdown(f"**Text:** {text}")
+    file = st.file_uploader("Upload a .wax file", type=["wax"])
+    if file:
+        with wave.open(file, "rb") as f:
+            st.write("File Name: ", f.getparams())
 
-if __name__ == '__main__':
-  main()
+if __name__ == "__main__":
+    main()
