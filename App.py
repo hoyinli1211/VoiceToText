@@ -49,7 +49,7 @@ def main():
         entities_html = highlight_entities(transcribed_text)
         #st.write("Transcribed Text: ",transcribed_text)
         #st.write("Entities: ", unsafe_allow_html=True)
-        st.write(generate_htmlZ(entities_html), unsafe_allow_html=True)
+        st.write(generate_html(entities_html), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
