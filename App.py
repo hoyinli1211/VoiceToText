@@ -18,6 +18,27 @@ def highlight_entities(text):
     html = displacy.render(doc, style="ent")
     return html
 
+def generate_html(text):
+    return f"""
+    <button onclick="copyText()">Copy Text</button>
+    <div id="highlighted-text">{text}</div>
+    <script>
+        function copyText() {{
+            // Get the text with NER highlighted
+            var text = document.getElementById("highlighted-text").innerText;
+            // Create a temporary textarea element
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            // Copy the text to the clipboard
+            document.execCommand("copy");
+            // Remove the temporary textarea element
+            document.body.removeChild(textArea);
+        }}
+    </script>
+    """
+
 def main():
     st.set_page_config(page_title="Transcribe Audio", page_icon=":microphone:", layout="wide")
     st.title("Transcribe Audio")
