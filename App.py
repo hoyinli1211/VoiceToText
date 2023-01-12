@@ -5,7 +5,7 @@ def main():
     st.set_page_config(page_title="Upload Voice File", page_icon=":microphone:", layout="wide")
     st.title("Upload Voice File")
 
-    file = st.file_uploader("Upload a .wax file", type=["wax"])
+    file = st.file_uploader("Upload a .wav file", type=["wav"])
     if file:
         with wave.open(file, "rb") as f:
             st.write("File Name: ", f.getparams())
