@@ -3,6 +3,8 @@ import speech_recognition as sr
 import spacy
 from spacy import displacy
 
+spacy.cli.download("en_core_web_sm")
+
 def transcribe_audio(audio_file):
     recognizer = sr.Recognizer()
     with sr.AudioFile(audio_file) as source:
