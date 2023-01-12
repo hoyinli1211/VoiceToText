@@ -47,9 +47,9 @@ def main():
     if file:
         transcribed_text = transcribe_audio(file)
         entities_html = highlight_entities(transcribed_text)
-        st.write("Transcribed Text: ",transcribed_text)
-        st.write("Entities: ", unsafe_allow_html=True)
-        st.write(entities_html, unsafe_allow_html=True)
+        #st.write("Transcribed Text: ",transcribed_text)
+        #st.write("Entities: ", unsafe_allow_html=True)
+        st.write(generate_htmlentities_html), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
