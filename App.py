@@ -20,22 +20,11 @@ def highlight_entities(text):
 
 def generate_html(text):
     return f"""
-    <button onclick="copyText()">Copy Text</button>
+    <button class="btn" data-clipboard-target="#highlighted-text">Copy Text</button>
     <div id="highlighted-text">{text}</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
     <script>
-        function copyText() {{
-            // Get the text with NER highlighted
-            var text = document.getElementById("highlighted-text").innerText;
-            // Create a temporary textarea element
-            var textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            // Copy the text to the clipboard
-            document.execCommand("copy");
-            // Remove the temporary textarea element
-            document.body.removeChild(textArea);
-        }}
+        new ClipboardJS('.btn');
     </script>
     """
 
