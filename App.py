@@ -75,7 +75,7 @@ def main():
 
     uploaded_file = st.file_uploader("Upload your .wav file", type=["wav"])
     if uploaded_file is not None:
-        transcribed_text = transcribe(uploaded_file)
+        transcribed_text = transcribe_audio(uploaded_file)
         entities_html = highlight_entities(transcribed_text)
         st.markdown(generate_html(uploaded_file, entities_html), unsafe_allow_html=True)
 
