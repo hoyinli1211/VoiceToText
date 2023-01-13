@@ -21,7 +21,7 @@ def highlight_entities(text):
 def generate_html(text):
     return f"""
     <button class="btn" data-clipboard-target="#highlighted-text">Copy Text</button>
-    <div id="highlighted-text">{text}</div>
+    <div id="highlighted-text"><span>{text}</span></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
     <script>
         new ClipboardJS('.btn');
