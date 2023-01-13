@@ -34,7 +34,7 @@ def main():
 
     file = st.file_uploader("Upload a .wav file", type=["wav"])
     if file:
-        transcribed_text = transcribe()
+        transcribed_text = transcribe_audio(file)
         entities_html = highlight_entities(transcribed_text)
         st.markdown(generate_html(entities_html), unsafe_allow_html=True)
 
