@@ -22,11 +22,29 @@ def generate_html(audio_src, text):
     return f"""
     <audio id="audio" src="{audio_src}" controls></audio>
     <p id="transcribed-text">{text}</p>
+    <div>
+        <button id="play-button" onclick="play()">Play</button>
+        <button id="copy-button" onclick="copyText()">Copy to Clipboard</button>
+    </div>
     <script>
         var audio = document.getElementById("audio");
         var transcribedText = document.getElementById("transcribed-text");
         var words = transcribedText.innerText.split(" ");
         var wordIndex = 0;
+        
+        function play(){{
+            audio.play();
+        }}
+
+        function copyText(){{
+            var textArea = document.createElement("textarea");
+            textArea.value = transcribedText.innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            textArea.remove();
+            alert("Text Copied to Clipboard");
+        }}
 
         var synth = window.speechSynthesis;
         var voices = synth.getVoices();
@@ -77,7 +95,8 @@ def main():
     if uploaded_file is not None:
         transcribed_text = transcribe_audio(uploaded_file)
         entities_html = highlight_entities(transcribed_text)
-        st.components.v1.html(generate_html(uploaded_file, entities_html), height=2000, scrolling=True)
+        html = generate_html(uploaded_file, entities_html)
+        st.components.v1.html(html, height=300)
 
 if __name__ == "__main__":
     main()
