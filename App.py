@@ -25,7 +25,7 @@ def generate_html(audio_src, text):
     <p id="transcribed-text">{text}</p>
     <div>
         <button id="play-button" onclick="play()">Play</button>
-        <button id="copy-button" onclick="copyText()">Copy to Clipboard</button>
+        <button id="copy-button" onclick="copyToClipboard()">Copy</button>
     </div>
     <script>
         var audio = document.getElementById("audio");
@@ -37,14 +37,16 @@ def generate_html(audio_src, text):
             audio.play();
         }}
 
-        function copyText(){{
-            var textArea = document.createElement("textarea");
-            textArea.value = transcribedText.innerText;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand("copy");
-            textArea.remove();
-            alert("Text Copied to Clipboard");
+        function copyToClipboard() {{
+            var copyText = document.getElementById("entities");
+            navigator.clipboard.writeText(copyText.innerHTML).then(
+                function() {{
+                    console.log("Text copied to clipboard");
+                }},
+                function(err) {{
+                    console.error("Could not copy text: ", err);
+                }}
+            );
         }}
 
         var synth = window.speechSynthesis;
