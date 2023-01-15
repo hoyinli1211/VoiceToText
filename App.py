@@ -17,6 +17,7 @@ def highlight_entities(text):
     doc = nlp(text)
     html = displacy.render(doc, style="ent")
     return html
+
 def generate_html(audio_src, text):
     return f"""
     <audio id="audio" src="{audio_src}" controls></audio>
@@ -76,7 +77,7 @@ def main():
     if uploaded_file is not None:
         transcribed_text = transcribe_audio(uploaded_file)
         entities_html = highlight_entities(transcribed_text)
-        st.components.v1.html(generate_html(entities_html), height=2000, scrolling=True
+        st.components.v1.html(generate_html(entities_html), height=2000, scrolling=True)
 
 if __name__ == "__main__":
     main()
