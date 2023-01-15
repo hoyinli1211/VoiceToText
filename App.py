@@ -2,6 +2,7 @@ import streamlit as st
 import speech_recognition as sr
 import spacy
 from spacy import displacy
+import base64
 
 spacy.cli.download("en_core_web_sm")
 
@@ -95,7 +96,11 @@ def main():
     if uploaded_file is not None:
         transcribed_text = transcribe_audio(uploaded_file)
         entities_html = highlight_entities(transcribed_text)
-        html = generate_html(uploaded_file, entities_html)
+        
+        uploaded_file.seek(0)
+        audio_src = "data:audio/wav;base64," + base64.b64encode(uploaded_file.read()).decode()
+        
+        html = generate_html(audio_src, entities_html)
         st.components.v1.html(html, height=300)
 
 if __name__ == "__main__":
