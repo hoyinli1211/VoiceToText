@@ -48,45 +48,6 @@ def generate_html(audio_src, text):
                 }}
             );
         }}
-
-        var synth = window.speechSynthesis;
-        var voices = synth.getVoices();
-        var utterance = new SpeechSynthesisUtterance();
-        utterance.voice = voices[0];
-        utterance.pitch = 1;
-        utterance.rate = 1;
-
-        audio.addEventListener("timeupdate", function(){{
-            var currentTime = audio.currentTime;
-            while (wordIndex < words.length && words[wordIndex].end < currentTime) {{
-                words[wordIndex].element.style.backgroundColor = "white";
-                wordIndex++;
-            }}
-            if (wordIndex < words.length) {{
-                words[wordIndex].element.style.backgroundColor = "yellow";
-            }}
-        }});
-
-        audio.addEventListener("play", function(){{
-            wordIndex = 0;
-            utterance.text = transcribedText.innerText;
-            synth.speak(utterance);
-        }});
-
-        audio.addEventListener("pause", function(){{
-            synth.cancel();
-        }});
-
-        audio.addEventListener("ended", function(){{
-            synth.cancel();
-        }});
-
-        transcribedText.innerHTML = words.map(function(word) {{
-            var element = document.createElement("span");
-            element.innerText = word;
-            element.style.backgroundColor = "white";
-            return element;
-        }});
     </script>
     """
 
