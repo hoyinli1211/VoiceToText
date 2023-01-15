@@ -26,7 +26,7 @@ def main():
     if uploaded_file is not None:
         transcribed_text = transcribe_audio(uploaded_file)
         entities_html = highlight_entities(transcribed_text)
-        st.markdown(entities_html, unsafe_allow_html=True)
+        st.components.v1.html(entities_html)
 
 if __name__ == "__main__":
     main()
