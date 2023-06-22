@@ -1,59 +1,52 @@
-import streamlit as st
+import os
+import zipfile
 import requests
-import io
-import tempfile
+import streamlit as st
+import numpy as np
 from pydub import AudioSegment
-import speech_recognition as sr
+import deepspeech
 
-def download_audio(url):
+def download_file(url, file_path):
     response = requests.get(url)
-    file = io.BytesIO(response.content)
-    return file
+    with open(file_path, "wb") as outfile:
+        outfile.write(response.content)
 
-def convert_audio_to_wav(audio_file):
-    audio = AudioSegment.from_file(audio_file, format="mp3")
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as converted_file:
-        audio.export(converted_file.name, format="wav")
-        return converted_file.name
-
-def transcribe_audio_sphinx(audio_file):
-    recognizer = sr.Recognizer()
-
-    with sr.AudioFile(audio_file) as source:
-        audio_data = recognizer.record(source)
-
-    try:
-        text = recognizer.recognize_sphinx(audio_data)
-        return text
-    except sr.UnknownValueError:
-        return "Sphinx could not understand the audio."
-    except sr.RequestError as e:
-        return f"Sphinx error; {e}"
+def transcribe_audio_deepspeech(audio_file, model_file):
+    model = deepspeech.Model(model_file)
+    audio = AudioSegment.from_file(audio_file).set_frame_rate(16000).set_channels(1)
+    audio_data = np.frombuffer(audio.raw_data, dtype=np.int16)
+    text = model.stt(audio_data)
+    return text
 
 def main():
-    st.title("Audio Transcription App")
+    st.title("Audio Transcription App with DeepSpeech")
 
-    option = st.selectbox("Choose the input source", ["Upload", "URL"], index=0)
+    # Download and extract the DeepSpeech model if it's not already present
+    model_url = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"
+    model_path = "path/to/save/deepspeech-model.pbmm"
+    
+    if not os.path.exists(model_path):
+        st.write("Downloading DeepSpeech model...")
+        zip_file_path = "path/to/save/deepspeech-model.zip"
+        download_file(model_url, zip_file_path)
+        
+        st.write("Extracting DeepSpeech model...")
+        with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
+            zip_ref.extractall(os.path.dirname(model_path))
+        os.remove(zip_file_path)
 
-    if option == "Upload":
-        audio_file = st.file_uploader("Choose an audio file", type=["mp3", "wav", "ogg", "flac"])
-    else:
-        url = st.text_input("Enter the audio file URL")
-        audio_file = None
-        if url:
-            audio_file = download_audio(url)
+    st.header("Upload Audio File")
+    audio_file = st.file_uploader("Choose an audio file", type=["wav", "mp3", "ogg"])
 
     if audio_file is not None:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
-            temp_file.write(audio_file.read())
-            audio_file.seek(0)
-            st.audio(temp_file.name)
+        audio_bytes = audio_file.read()
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_audio_file:
+            tmp_audio_file.write(audio_bytes)
+            transcription = transcribe_audio_deepspeech(tmp_audio_file.name, model_path)
+            os.unlink(tmp_audio_file.name)
 
-        st.write("Transcribing audio file...")
-        converted_audio_file = convert_audio_to_wav(audio_file)
-        transcript = transcribe_audio_sphinx(converted_audio_file)
-        st.write("Transcription:")
-        st.write(transcript)
+        st.header("Transcription")
+        st.write(transcription)
 
 if __name__ == "__main__":
     main()
