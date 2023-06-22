@@ -15,8 +15,8 @@ def create_audio_stream():
             "audio": True,
             "video": False,
         },
-        height=0,
-        width=0,
+        height=300,
+        width=400,
     )
 
 st.title("Microphone Stream")
