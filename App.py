@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import io
+import os
 import audioread
 import tempfile
 from pydub import AudioSegment
@@ -36,8 +37,8 @@ def main():
     # https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3
     MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"  # noqa
     LANG_MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"  # noqa
-    MODEL_LOCAL_PATH = getcwd() / "models/deepspeech-0.9.3-models.pbmm"
-    LANG_MODEL_LOCAL_PATH = getcwd() / "models/deepspeech-0.9.3-models.scorer"
+    MODEL_LOCAL_PATH = os.getcwd() / "models/deepspeech-0.9.3-models.pbmm"
+    LANG_MODEL_LOCAL_PATH = os.getcwd() / "models/deepspeech-0.9.3-models.scorer"
 
     download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
     download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
