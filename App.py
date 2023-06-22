@@ -13,7 +13,7 @@ def download_and_extract_model(url, model_path):
     with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
         zf.extractall(model_path)
 
-@caching.cache
+@cache.cache
 def download_and_load_vosk_model(model_url, model_path):
     download_and_extract_model(model_url, model_path)
     return load_vosk_model(model_path)
