@@ -1,24 +1,20 @@
 import streamlit as st
-import speech_recognition as sr
 import requests
 import io
 import audioread
 import tempfile
 from pydub import AudioSegment
+import deepspeech
 
-def audio_file_to_text(audio_file):
-    recognizer = sr.Recognizer()
+def load_deepspeech_model(model_path="deepspeech-x.x.x-models.pbmm"):
+    model = deepspeech.Model(model_path)
+    return model
 
-    with sr.AudioFile(audio_file) as source:
-        audio_data = recognizer.record(source)
+def audio_file_to_text(audio_file, model):
+    with open(audio_file, "rb") as audio:
+        audio_data = audio.read()
 
-    try:
-        text = recognizer.recognize_google(audio_data)
-    except sr.UnknownValueError:
-        text = "Google Speech Recognition could not understand the audio"
-    except sr.RequestError as e:
-        text = f"Could not request results from Google Speech Recognition service; {e}"
-
+    text = model.stt(audio_data)
     return text
 
 def download_audio(url):
@@ -34,6 +30,9 @@ def convert_audio_to_wav(audio_file):
 
 def main():
     st.title("Audio Transcription App")
+
+    # Load DeepSpeech model once
+    deepspeech_model = load_deepspeech_model()
 
     option = st.selectbox("Choose the input source", ["Upload", "URL"], index=0)
 
@@ -53,7 +52,7 @@ def main():
 
         st.write("Transcribing audio file...")
         converted_audio_file = convert_audio_to_wav(audio_file)
-        transcript = audio_file_to_text(converted_audio_file)
+        transcript = audio_file_to_text(converted_audio_file, deepspeech_model)
         st.write("Transcription:")
         st.write(transcript)
 
