@@ -4,6 +4,7 @@ import streamlit as st
 import numpy as np
 from pydub import AudioSegment
 import deepspeech
+import tempfile
 
 def download_file(url, file_path):
     response = requests.get(url)
