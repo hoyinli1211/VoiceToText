@@ -1,2 +1,2 @@
-streamlit==1.1.0
-py-transcriber==1.0.2
+streamlit==1.20.0
+pytranscriber==23.1.2
