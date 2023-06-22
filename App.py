@@ -9,8 +9,6 @@ def create_audio_stream():
             "audio": True,
             "video": False,
         },
-        height=300,
-        width=400,
         on_audio_data=get_audio_data,
         detection_interval=500,
         async_processing=True,
