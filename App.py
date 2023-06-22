@@ -6,7 +6,7 @@ import tempfile
 from pydub import AudioSegment
 import deepspeech
 
-def load_deepspeech_model(model_path="deepspeech-0.9.3-models.pbmm", scorer_path="deepspeech-0.9.3-models.scorer"):
+def load_deepspeech_model():
     model = deepspeech.Model(model_path)
     model.enableExternalScorer(scorer_path)
     return model
