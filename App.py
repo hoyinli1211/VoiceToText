@@ -1,5 +1,4 @@
 import os
-import zipfile
 import requests
 import streamlit as st
 import numpy as np
@@ -21,28 +20,22 @@ def transcribe_audio_deepspeech(audio_file, model_file):
 def main():
     st.title("Audio Transcription App with DeepSpeech")
 
-    # Download and extract the DeepSpeech model if it's not already present
-    model_url = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"
-    
     # Get the current working directory
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
     # Create the 'models' directory if it doesn't exist
     MODELS_DIR = os.path.join(CURRENT_DIR, "models")
     os.makedirs(MODELS_DIR, exist_ok=True)
-    
-    # Set the model path and temporary zip file path
+
+    # Set the model path
     model_path = os.path.join(MODELS_DIR, "deepspeech-model.pbmm")
 
+    # Download the DeepSpeech model if it's not already present
+    model_url = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"
+    
     if not os.path.exists(model_path):
         st.write("Downloading DeepSpeech model...")
-        zip_file_path = os.path.join(MODELS_DIR, "deepspeech-model.zip")
-        download_file(model_url, zip_file_path)
-        
-        st.write("Extracting DeepSpeech model...")
-        with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
-            zip_ref.extractall(os.path.dirname(model_path))
-        os.remove(zip_file_path)
+        download_file(model_url, model_path)
 
     st.header("Upload Audio File")
     audio_file = st.file_uploader("Choose an audio file", type=["wav", "mp3", "ogg"])
