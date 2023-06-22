@@ -4,4 +4,4 @@ requests
 audioread
 pydub
 ffmpeg
-deepspeech
+deepspeech --model deepspeech-0.9.3-models.pbmm --scorer deepspeech-0.9.3-models.scorer --audio my_audio_file.wav
