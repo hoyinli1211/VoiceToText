@@ -3,7 +3,7 @@ import streamlit_webrtc as webrtc
 
 # grant permission to use microphone
 def create_audio_stream():
-    return webrtc.streamer(
+    return webrtc.Streamer(
         audio=True,
         video=False,
         constraints={
