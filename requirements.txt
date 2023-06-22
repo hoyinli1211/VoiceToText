@@ -6,3 +6,4 @@ pydub
 ffmpeg
 deepspeech
 vosk
+pocketsphinx
