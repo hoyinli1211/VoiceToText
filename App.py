@@ -7,7 +7,7 @@ from pydub import AudioSegment
 import deepspeech
 
 def load_deepspeech_model():
-    model = deepspeech.Model(model_path)
+    model = deepspeech.Model(model_path="https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm", scorer_path="https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"
     model.enableExternalScorer(scorer_path)
     return model
 
