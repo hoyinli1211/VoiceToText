@@ -8,7 +8,7 @@ import tempfile
 def audio_file_to_text(audio_file):
     recognizer = sr.Recognizer()
 
-    with audio_file as source:
+    with sr.AudioFile(audio_file) as source:
         audio_data = recognizer.record(source)
 
     try:
