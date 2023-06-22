@@ -43,6 +43,11 @@ def main():
 
     if audio_file is not None:
         audio_bytes = audio_file.read()
+
+        # Display audio player
+        st.header("Audio Player")
+        st.audio(audio_bytes, format="audio/wav")
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_audio_file:
             tmp_audio_file.write(audio_bytes)
             transcription = transcribe_audio_deepspeech(tmp_audio_file.name, model_path)
