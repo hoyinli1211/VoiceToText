@@ -6,6 +6,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Add FFmpeg executables to the system path
+ENV PATH="/usr/bin:${PATH}"
+
 COPY . /app
 WORKDIR /app
 RUN pip install -r requirements.txt
