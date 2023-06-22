@@ -1,5 +1,5 @@
 import streamlit as st
-import pytranscriber as pt
+from pytranscriber import Transcriber
 
 # Define the Streamlit app
 def app():
