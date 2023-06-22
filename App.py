@@ -14,9 +14,7 @@ def create_audio_stream():
         media_stream_constraints={
             "audio": True,
             "video": False,
-        },
-        height=300,
-        width=400,
+        }
     )
 
 st.title("Microphone Stream")
