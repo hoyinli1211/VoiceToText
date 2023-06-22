@@ -5,8 +5,10 @@ import streamlit_webrtc as webrtc
 def create_audio_stream():
     return webrtc.webrtc_streamer(
         key="audio",
-        audio=True,
-        video=False,
+        media_stream_constraints={
+            "audio": True,
+            "video": False,
+        },
         height=300,
         width=400,
         on_audio_data=get_audio_data,
