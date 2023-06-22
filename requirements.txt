@@ -1,2 +1,2 @@
 streamlit==1.1.0
-pytranscriber==1.0.2
+py-transcriber==1.0.2
