@@ -3,3 +3,4 @@ SpeechRecognition
 requests
 audioread
 pydub
+ffmpeg
