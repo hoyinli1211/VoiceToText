@@ -1,17 +1,12 @@
-import os
 import streamlit as st
 import speech_recognition as sr
-from pydub import AudioSegment
 import requests
 import io
-
-# Set the paths to the FFmpeg and FFprobe executables
-AudioSegment.converter = "/usr/bin/ffmpeg"
-AudioSegment.ffprobe = "/usr/bin/ffprobe"
+import audioread
+import tempfile
 
 def audio_file_to_text(audio_file):
     recognizer = sr.Recognizer()
-    audio_segment = AudioSegment.from_file(audio_file)
 
     with audio_file as source:
         audio_data = recognizer.record(source)
@@ -44,9 +39,12 @@ def main():
             audio_file = download_audio(url)
 
     if audio_file is not None:
-        st.audio(audio_file)
-        st.write("Transcribing audio file...")
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+            temp_file.write(audio_file.read())
+            audio_file.seek(0)
+            st.audio(temp_file.name)
 
+        st.write("Transcribing audio file...")
         transcript = audio_file_to_text(audio_file)
         st.write("Transcription:")
         st.write(transcript)
