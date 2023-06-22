@@ -1,3 +1,2 @@
 streamlit
-pytranscriber
 pydub
