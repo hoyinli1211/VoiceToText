@@ -11,9 +11,10 @@ spacy.cli.download("en_core_web_sm")
 def create_audio_stream():
     return webrtc.webrtc_streamer(
         key="audio",
-        audio=True,
-        video=False,
-        facing_mode="user",
+        media_stream_constraints={
+            "audio": True,
+            "video": False,
+        },
         height=0,
         width=0,
     )
