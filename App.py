@@ -6,8 +6,8 @@ import tempfile
 from pydub import AudioSegment
 import deepspeech
 
-def load_deepspeech_model():
-    model = deepspeech.Model(model_path="https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm", scorer_path="https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer")
+def load_deepspeech_model(a,b):
+    model = deepspeech.Model(model_path=a, scorer_path=b)
     model.enableExternalScorer(scorer_path)
     return model
 
@@ -33,7 +33,16 @@ def main():
     st.title("Audio Transcription App")
 
     # Load DeepSpeech model once
-    deepspeech_model = load_deepspeech_model()
+    # https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3
+    MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"  # noqa
+    LANG_MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"  # noqa
+    MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.pbmm"
+    LANG_MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.scorer"
+
+    download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
+    download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
+    
+    deepspeech_model = load_deepspeech_model(MODEL_LOCAL_PATH, LANG_MODEL_LOCAL_PATH)
 
     option = st.selectbox("Choose the input source", ["Upload", "URL"], index=0)
 
