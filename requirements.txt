@@ -1,3 +1,2 @@
-pydub
-pytranscriber
 streamlit==1.20.0
+pytranscriber
