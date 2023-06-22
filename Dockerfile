@@ -8,7 +8,6 @@ RUN apt-get update && \
 
 COPY . /app
 WORKDIR /app
-RUN pip install --upgrade pip==23.1.2
 RUN pip install -r requirements.txt
 EXPOSE 80
 RUN mkdir ~/.streamlit
