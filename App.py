@@ -1,22 +1,41 @@
 import streamlit as st
 import requests
 import io
-import os
-import audioread
 import tempfile
+import zipfile
 from pydub import AudioSegment
-import deepspeech
+from vosk import Model, KaldiRecognizer, SetLogLevel
+import json
+from streamlit import caching
 
-def load_deepspeech_model(a,b):
-    model = deepspeech.Model(model_path=a, scorer_path=b)
-    model.enableExternalScorer(scorer_path)
+def download_and_extract_model(url, model_path):
+    response = requests.get(url)
+    with zipfile.ZipFile(io.BytesIO(response.content)) as zf:
+        zf.extractall(model_path)
+
+@caching.cache
+def download_and_load_vosk_model(model_url, model_path):
+    download_and_extract_model(model_url, model_path)
+    return load_vosk_model(model_path)
+
+def load_vosk_model(model_path="vosk-model-en"):
+    model = Model(model_path)
     return model
 
 def audio_file_to_text(audio_file, model):
-    with open(audio_file, "rb") as audio:
+    rec = KaldiRecognizer(model, 16000)
+
+    with open(audio_file, 'rb') as audio:
         audio_data = audio.read()
 
-    text = model.stt(audio_data)
+    results = []
+    for data in AudioSegment.from_file(io.BytesIO(audio_data)).raw_data:
+        if rec.AcceptWaveform(data):
+            results.append(json.loads(rec.Result())["text"])
+        else:
+            results.append(json.loads(rec.PartialResult())["partial"])
+
+    text = " ".join(results)
     return text
 
 def download_audio(url):
@@ -33,17 +52,10 @@ def convert_audio_to_wav(audio_file):
 def main():
     st.title("Audio Transcription App")
 
-    # Load DeepSpeech model once
-    # https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3
-    MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"  # noqa
-    LANG_MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"  # noqa
-    MODEL_LOCAL_PATH = os.getcwd() / "models/deepspeech-0.9.3-models.pbmm"
-    LANG_MODEL_LOCAL_PATH = os.getcwd() / "models/deepspeech-0.9.3-models.scorer"
-
-    download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
-    download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
-    
-    deepspeech_model = load_deepspeech_model(MODEL_LOCAL_PATH, LANG_MODEL_LOCAL_PATH)
+    # Download and load the Vosk model
+    model_url = "https://alphacephei.com/kaldi/models/vosk-model-small-en-us-0.15.zip"
+    model_path = "vosk-model-en"
+    vosk_model = download_and_load_vosk_model(model_url, model_path)
 
     option = st.selectbox("Choose the input source", ["Upload", "URL"], index=0)
 
@@ -63,7 +75,7 @@ def main():
 
         st.write("Transcribing audio file...")
         converted_audio_file = convert_audio_to_wav(audio_file)
-        transcript = audio_file_to_text(converted_audio_file, deepspeech_model)
+        transcript = audio_file_to_text(converted_audio_file, vosk_model)
         st.write("Transcription:")
         st.write(transcript)
 
