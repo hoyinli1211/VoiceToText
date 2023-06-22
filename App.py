@@ -1,21 +1,19 @@
 import streamlit as st
-from pytranscriber import Transcriber
+from pydub import AudioSegment
 
-def transcribe_audio(audio_file):
-    transcriber = Transcriber()
-    transcript = transcriber.transcribe(audio_file)
-    return transcript
+def get_audio_duration(audio_file):
+    audio = AudioSegment.from_file(audio_file)
+    return audio.duration_seconds
 
 def main():
-    st.title("Audio Transcription App")
-    
+    st.title("Audio File Information App")
+
     audio_file = st.file_uploader("Choose an audio file", type=["mp3", "wav", "ogg", "flac"])
-    
+
     if audio_file is not None:
-        st.write("Transcribing audio...")
-        transcript = transcribe_audio(audio_file)
-        st.write("Transcription completed!")
-        st.text_area("Transcript", transcript, height=200)
+        st.audio(audio_file)
+        duration = get_audio_duration(audio_file)
+        st.write(f"Audio duration: {duration:.2f} seconds")
 
 if __name__ == "__main__":
     main()
