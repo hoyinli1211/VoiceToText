@@ -2,4 +2,4 @@ streamlit==1.14.0
 wave
 SpeechRecognition
 spacy
--U streamlit-webrtc
+streamlit-webrtc
