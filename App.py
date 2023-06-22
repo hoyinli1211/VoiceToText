@@ -6,7 +6,7 @@ import zipfile
 from pydub import AudioSegment
 from vosk import Model, KaldiRecognizer, SetLogLevel
 import json
-from streamlit import caching
+from streamlit import cache
 
 def download_and_extract_model(url, model_path):
     response = requests.get(url)
