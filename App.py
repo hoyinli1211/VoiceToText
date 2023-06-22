@@ -23,15 +23,20 @@ def main():
 
     # Download and extract the DeepSpeech model if it's not already present
     model_url = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"
+    
     # Get the current working directory
     CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # Create the 'models' directory if it doesn't exist
+    MODELS_DIR = os.path.join(CURRENT_DIR, "models")
+    os.makedirs(MODELS_DIR, exist_ok=True)
     
     # Set the model path and temporary zip file path
-    model_path = os.path.join(CURRENT_DIR, "models", "deepspeech-model.pbmm")
+    model_path = os.path.join(MODELS_DIR, "deepspeech-model.pbmm")
 
     if not os.path.exists(model_path):
         st.write("Downloading DeepSpeech model...")
-        zip_file_path = os.path.join(CURRENT_DIR, "models", "deepspeech-model.zip")
+        zip_file_path = os.path.join(MODELS_DIR, "deepspeech-model.zip")
         download_file(model_url, zip_file_path)
         
         st.write("Extracting DeepSpeech model...")
