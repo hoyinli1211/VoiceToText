@@ -1,35 +1,27 @@
 import streamlit as st
-import streamlit_webrtc as webrtc
+import pytranscriber as pt
 
-# grant permission to use microphone
-def create_audio_stream():
-    return webrtc.Streamer(
-        audio=True,
-        video=False,
-        constraints={
-            "audio": True,
-            "video": False,
-        },
-        on_audio_data=get_audio_data,
-        async_processing=True,
-    )
+# Define the Streamlit app
+def app():
+    st.title("Audio Transcription")
 
-def get_audio_data(audio_data):
-    st.session_state.audio_data.append(audio_data)
+    # Upload the audio file
+    audio_file = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
 
-def playback_audio():
-    if st.session_state.audio_data:
-        audio_data = b''.join(st.session_state.audio_data)
-        st.audio(audio_data, format="audio/wav")
+    if audio_file is not None:
+        # Display the uploaded audio file
+        st.audio(audio_file, format='audio/mp3')
 
-st.title("Microphone Stream")
+        # Create the PyTranscriber object
+        transcriber = pt.Transcriber()
 
-if "audio_data" not in st.session_state:
-    st.session_state.audio_data = []
+        # Transcribe the audio file
+        transcript = transcriber.transcribe(audio_file)
 
-stream = create_audio_stream()
-if stream:
-    st.button("Start Recording")
-    if st.button("Stop Recording"):
-        stream.stop()
-        playback_audio()
+        # Display the transcript
+        st.write("Transcript:")
+        st.write(transcript)
+
+# Run the Streamlit app
+if __name__ == '__main__':
+    app()
