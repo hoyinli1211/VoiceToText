@@ -4,6 +4,7 @@ import requests
 import io
 import audioread
 import tempfile
+from pydub import AudioSegment
 
 def audio_file_to_text(audio_file):
     recognizer = sr.Recognizer()
@@ -25,6 +26,12 @@ def download_audio(url):
     file = io.BytesIO(response.content)
     return file
 
+def convert_audio_to_wav(audio_file):
+    audio = AudioSegment.from_file(audio_file, format="mp3")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as converted_file:
+        audio.export(converted_file.name, format="wav")
+        return converted_file.name
+
 def main():
     st.title("Audio Transcription App")
 
@@ -45,7 +52,8 @@ def main():
             st.audio(temp_file.name)
 
         st.write("Transcribing audio file...")
-        transcript = audio_file_to_text(audio_file)
+        converted_audio_file = convert_audio_to_wav(audio_file)
+        transcript = audio_file_to_text(converted_audio_file)
         st.write("Transcription:")
         st.write(transcript)
 
