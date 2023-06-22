@@ -1,27 +1,21 @@
 import streamlit as st
 from pytranscriber import Transcriber
 
-# Define the Streamlit app
-def app():
-    st.title("Audio Transcription")
+def transcribe_audio(audio_file):
+    transcriber = Transcriber()
+    transcript = transcriber.transcribe(audio_file)
+    return transcript
 
-    # Upload the audio file
-    audio_file = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
-
+def main():
+    st.title("Audio Transcription App")
+    
+    audio_file = st.file_uploader("Choose an audio file", type=["mp3", "wav", "ogg", "flac"])
+    
     if audio_file is not None:
-        # Display the uploaded audio file
-        st.audio(audio_file, format='audio/mp3')
+        st.write("Transcribing audio...")
+        transcript = transcribe_audio(audio_file)
+        st.write("Transcription completed!")
+        st.text_area("Transcript", transcript, height=200)
 
-        # Create the PyTranscriber object
-        transcriber = pt.Transcriber()
-
-        # Transcribe the audio file
-        transcript = transcriber.transcribe(audio_file)
-
-        # Display the transcript
-        st.write("Transcript:")
-        st.write(transcript)
-
-# Run the Streamlit app
-if __name__ == '__main__':
-    app()
+if __name__ == "__main__":
+    main()
