@@ -3,21 +3,14 @@ import streamlit_webrtc as webrtc
 
 # grant permission to use microphone
 def create_audio_stream():
-    def transform_video_frame(video_frame):
-        audio_data = video_frame.audio_frame.samples
-        get_audio_data(audio_data)
-        return video_frame
-
-    return webrtc.webrtc_streamer(
-        key="audio",
-        media_stream_constraints={
+    return webrtc.Streamer(
+        audio=True,
+        video=False,
+        constraints={
             "audio": True,
             "video": False,
         },
-        height=300,
-        width=400,
-        video_transformer=transform_video_frame,
-        detection_interval=500,
+        on_audio_data=get_audio_data,
         async_processing=True,
     )
 
@@ -38,5 +31,5 @@ stream = create_audio_stream()
 if stream:
     st.button("Start Recording")
     if st.button("Stop Recording"):
-        st.stop()
+        stream.stop()
         playback_audio()
