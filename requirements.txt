@@ -5,3 +5,4 @@ audioread
 pydub
 ffmpeg
 deepspeech
+vosk
